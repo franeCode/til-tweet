@@ -1,0 +1,14 @@
+@import "tailwindcss/base";
+
+@import "tailwindcss/components";
+
+@import "tailwindcss/utilities";
+
+
+.post {
+    @apply px-10 my-4 py-6 bg-white rounded-lg shadow-md w-2/3;
+    padding: 2rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    width: 80%;
+}

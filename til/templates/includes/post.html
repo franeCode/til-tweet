@@ -15,7 +15,7 @@
       <span>&nbsp;</span>
       {% endif %}
       <div>
-        <a class="flex items-center" href="#">
+        <a class="flex items-center" href="{% url 'profiles:detail' post.author.username %}">
           {% thumbnail post.author.profile.image "60x60" crop="center" as im %}
           <img
             src="{{ im.url }}"
