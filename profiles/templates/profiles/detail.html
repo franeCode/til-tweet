@@ -50,20 +50,16 @@
       <p class="text-sm font-normal text-gray-600">Posts</p>
     </div>
     <div class="flex flex-col items-center justify-center">
-      <p class="text-2xl font-bold text-gray-600">9.7K</p>
+      <p class="text-2xl font-bold text-gray-600">{{ total_following }}</p>
       <p class="text-sm font-normal text-gray-600">Followers</p>
     </div>
-    <div class="flex flex-col items-center justify-center">
-      <p class="text-2xl font-bold text-gray-600">434</p>
-      <p class="text-sm font-normal text-gray-600">Following</p>
-    </div>
   </div>
-
+</div>
   <div id="posts-container">
-    {% for post in posts %}
+    {% for post in user_posts %}
         {% include 'includes/post.html' with post=post show_detail_link=True %}
     {% endfor %} 
 </div>
 
-  {% endblock %}
-</div>
+{% endblock %}
+
