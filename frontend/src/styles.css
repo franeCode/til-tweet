@@ -1037,6 +1037,10 @@ video {
   width: max-content;
 }
 
+.w-3\/4 {
+  width: 75%;
+}
+
 .max-w-xs {
   max-width: 20rem;
 }
