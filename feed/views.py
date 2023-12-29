@@ -23,7 +23,6 @@ class HomePage(TemplateView):
                 Follower.objects.filter(followed_by=self.request.user).values_list('following', flat=True)
             )
             if not following:
-                # Show the default 30
                 posts = Post.objects.all().order_by('-id')[0:30]
             else:
                 posts = Post.objects.filter(author__in=following).order_by('-id')[0:60]
@@ -38,6 +37,10 @@ class PostDetailView(DetailView):
     template_name = "feed/detail.html"
     model = Post
     context_object_name = "post"
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        return super().dispatch(request, *args, **kwargs)
     
 class CreateNewPost(LoginRequiredMixin, CreateView):
     model = Post
@@ -72,7 +75,7 @@ class CreateNewPost(LoginRequiredMixin, CreateView):
         
 class ProfileView(TemplateView):
     http_method_names = ["get"]
-    template_name = "feed/profile.html"
+    template_name = "feed/detail.html"
     model = User 
     context_object_name = "user"
     

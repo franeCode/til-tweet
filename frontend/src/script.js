@@ -89,3 +89,28 @@ $(document).on("click", ".js-toggle-modal", function(e) {
         }
     });
 })
+.on("click", ".js-posts-button", function(e) {
+    e.preventDefault();
+    const url = "{% url 'profiles:detail' user.username %}";
+    updatePostsContent(url);
+});
+
+$(document).on("click", ".js-following-button", function(e) {
+    e.preventDefault();
+    const url = "{% url 'profiles:detail' user.username %}";  
+    updatePostsContent(url);
+});
+
+function updatePostsContent(url) {
+    $.ajax({
+        type: 'GET', 
+        url: url,
+        success: (data) => {
+            // Assuming your JSON data includes an 'user_posts' key with the HTML content
+            $("#posts-container").html(data.user_posts);
+        },
+        error: (error) => {
+            console.warn(error);
+        }
+    });
+}

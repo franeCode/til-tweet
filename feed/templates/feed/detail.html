@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% load thumbnail %}
 
-{% block title %} 
-{{ post.text}} by {{ post.author.username}} 
-{% endblock%}
+{% comment %} {% block title %} 
+{{ post.author.username}}'s profile 
+{% endblock%} {% endcomment %}
 
 {% block body %}
     {% include "includes/detail.html" %}
     {% include "includes/post.html" with post=post %}
-{% endblock%}
+{% endblock %}

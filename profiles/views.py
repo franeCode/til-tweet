@@ -25,7 +25,6 @@ class ProfileDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         
         context['user_posts'] = Post.objects.filter(author=user).order_by('-id')[0:30]
-        
         context['total_posts'] = Post.objects.filter(author=user).count()
         context['total_following'] = Follower.objects.filter(following=user).count()
         context['total_followed_by'] = Follower.objects.filter(followed_by=user).count()

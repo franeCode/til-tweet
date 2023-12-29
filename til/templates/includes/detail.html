@@ -1,6 +1,6 @@
 {% load thumbnail %} 
 
-{% block title %}{{ user.username }}{% endblock %}
+{% comment %} {% block title %}{{ user.username }}'s Profile{% endblock %} {% endcomment %}
 
 {% block body %}
 <div
@@ -58,4 +58,21 @@ class="relative flex flex-col items-center rounded-[20px] w-3/4 mx-auto p-4 bg-w
   </div>
 </div>
 </div>
+
+{% comment %} {% with content_type=request.GET.content_type|default:"posts" %}
+
+  <div>
+    <a href="?content_type=posts">Posts</a>
+    <a href="?content_type=following">Following</a>
+  </div>
+
+  <div id="posts-container">
+    {% if content_type == "posts" %}
+      {% include 'includes/post.html' with post=user_posts show_detail_link=True %}
+    {% elif content_type == "following" %}
+      {% include 'includes/post.html' with post=posts show_detail_link=True %}
+    {% endif %}
+  </div>
+
+{% endwith %}  {% endcomment %}
 {% endblock %}
