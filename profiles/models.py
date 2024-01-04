@@ -12,6 +12,9 @@ class Profile(models.Model):
         related_name="profile"
     )
     image = ImageField(upload_to='profiles')
+    cover = ImageField(upload_to='profiles')
+    bio = models.CharField(max_length=150)
+    name = models.CharField(max_length=50)
     
     def __str__(self):
         return self.user.username
