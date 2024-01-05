@@ -114,3 +114,9 @@ function updatePostsContent(url) {
         }
     });
 }
+
+$(document).on("click", ".js-toggle-edit", function(e) {
+    e.preventDefault()
+    $(".js-edit-modal").toggleClass("hidden")
+    console.log("hidden")
+})

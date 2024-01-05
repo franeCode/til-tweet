@@ -2,7 +2,7 @@ from typing import Any
 from django.contrib.auth.models import User
 from django.http.request import HttpRequest as HttpRequest
 from django.http.response import HttpResponse as HttpResponse 
-from django.views.generic import DetailView, View 
+from django.views.generic import DetailView, View, UpdateView 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse, HttpResponseBadRequest
 from feed.models import Post
@@ -68,5 +68,7 @@ class FollowView(LoginRequiredMixin, View):
             'success': True,
             'wording': "Unfollow" if data['action'] == "follow" else "Follow"
         })
-            
+
+class EditProfileView(LoginRequiredMixin, UpdateView):
+    http_method_names = ["post"]
         
