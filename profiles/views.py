@@ -7,6 +7,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse, HttpResponseBadRequest
 from feed.models import Post
 from followers.models import Follower
+from django.contrib import messages
+from .models import Profile
+from django.urls import reverse_lazy
+
 
 class ProfileDetailView(DetailView):
     html_method_names = ["get"]
@@ -71,4 +75,24 @@ class FollowView(LoginRequiredMixin, View):
 
 class EditProfileView(LoginRequiredMixin, UpdateView):
     http_method_names = ["post"]
-        
+    template_name = "profiles/detail.html"
+    model = Profile 
+    context_object_name = "user"
+    slug_field = "user__username"
+    slug_url_kwarg = "username"
+    fields = ['name', 'image', 'bio', 'cover', 'coding_stack']
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['name'].initial = self.object.name
+        form.fields['bio'].initial = self.object.bio
+        form.fields['coding_stack'].initial = self.object.coding_stack.all()
+        return form
+
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.SUCCESS, 'Your profile was updated successfully')
+        self.object = form.save()
+        return JsonResponse({'success': True, 'redirect_url': reverse_lazy('profiles:detail', kwargs={'username': self.object.user.username})})
+
+    def get_success_url(self):
+        return reverse_lazy('profiles:detail', kwargs={'username': self.object.user.username})

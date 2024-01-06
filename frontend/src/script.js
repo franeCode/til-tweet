@@ -1,3 +1,7 @@
+const name = userProfileData.name;
+const bio = userProfileData.bio;
+
+
 $.ajaxSetup({
     beforeSend: function beforeSend(xhr, settings) {
         function getCookie(name) {
@@ -10,7 +14,6 @@ $.ajaxSetup({
                 for (let i = 0; i < cookies.length; i += 1) {
                     const cookie = jQuery.trim(cookies[i]);
 
-                    // Does this cookie string begin with the name we want?
                     if (cookie.substring(0, name.length + 1) === (`${name}=`)) {
                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                         break;
@@ -22,7 +25,7 @@ $.ajaxSetup({
         }
 
         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-            // Only send the token to relative URLs i.e. locally.
+            
             xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
         }
     },
@@ -35,7 +38,9 @@ $(document).on("click", ".js-toggle-modal", function(e) {
 })
 .on("click", ".js-submit", function(e) {
     e.preventDefault()
+    console.log("clicked")
     const text = $(".js-post-text").val().trim()
+    console.log(text)
     const $btn = $(this)
 
     if(!text.length) {
@@ -106,7 +111,6 @@ function updatePostsContent(url) {
         type: 'GET', 
         url: url,
         success: (data) => {
-            // Assuming your JSON data includes an 'user_posts' key with the HTML content
             $("#posts-container").html(data.user_posts);
         },
         error: (error) => {
@@ -118,5 +122,42 @@ function updatePostsContent(url) {
 $(document).on("click", ".js-toggle-edit", function(e) {
     e.preventDefault()
     $(".js-edit-modal").toggleClass("hidden")
+
+    $("#name").val(name);
+    $("#bio").val(bio);
     console.log("hidden")
 })
+
+.on("click", ".js-edit", function(e) {
+    e.preventDefault();
+    const $btn = $(this);
+    
+    const formData = new FormData($("#editProfileForm")[0]);
+
+    $btn.prop("disabled", true).text("Updating Profile!");
+    
+    $.ajax({
+        type: 'POST',
+        url: $("#editProfileForm").attr("action"),  
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: (data) => {
+            if (data.success) {
+                console.log("Profile Updated!");
+                $btn.prop("disabled", false).text("Profile Updated!");
+                $(".js-edit-modal").addClass("hidden");
+                if (data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                }
+            } else {
+                console.warn("Error Updating Profile");
+                $btn.prop("disabled", false).text("Error Updating Profile");
+            }
+        },
+        error: (error) => {
+            console.warn(error);
+            $btn.prop("disabled", false).text("Error Updating Profile");
+        }
+    });
+});
