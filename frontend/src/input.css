@@ -12,3 +12,6 @@
     margin-bottom: 0.5rem;
     width: 80%;
 }
+ .header-text {
+    @apply text-xl font-bold text-gray-600;
+ }

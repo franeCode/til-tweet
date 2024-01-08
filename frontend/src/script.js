@@ -1,5 +1,6 @@
 const name = userProfileData.name;
 const bio = userProfileData.bio;
+const coding_stack = userProfileData.coding_stack;
 
 
 $.ajaxSetup({
