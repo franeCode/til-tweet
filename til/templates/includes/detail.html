@@ -1,21 +1,17 @@
 {% load thumbnail %} {% comment %} {% block title %}{{ user.username }}'s
 Profile{% endblock %} {% endcomment %} {% block body %}
 <div
-  class="relative flex flex-col items-center rounded-[20px] w-3/4 mx-auto p-4 bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none"
+  class="relative flex flex-col items-center justify-center rounded-[20px] w-2/3 mx-auto p-4 bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none"
 >
   <div class="relative flex h-32 w-full justify-center rounded-xl bg-cover">
     {% thumbnail user.profile.cover "500x500" crop="center" as im %} 
     <img
-      class="h-full w-full rounded-full"
+      class="absolute flex h-32 w-full justify-center rounded-xl bg-cover"
       src="{{ user.profile.cover.url }}"
       alt="profile-image"
     />
     {% endthumbnail %} 
-    {% if request.user.is_authenticated and request.user == user %}
-    <button class="js-toggle-edit">
-      <i class="absolute top-0 right-0 w-full bx bxs-edit"></i>
-    </button>
-    {% endif %}
+    
     <div
       class="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400 dark:!border-navy-700"
     >
@@ -31,6 +27,11 @@ Profile{% endblock %} {% endcomment %} {% block body %}
     %}
   </div>
   <div class="mt-16 flex flex-col items-center">
+    {% if request.user.is_authenticated and request.user == user %}
+    <button class="js-toggle-edit">
+      <i class="absolute top-0 right-0 w-full bx bxs-edit text-gray-500"></i>
+    </button>
+    {% endif %}
     <h2 class="text-xl font-bold text-gray-600">{{ user.profile.name }}</h2>
     <h4 class="text-base text-gray-600">@{{ user.username }}</h4>
     {% if request.user.is_authenticated %} {% if request.user != user %}
