@@ -1,8 +1,7 @@
-@import "tailwindcss/base";
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
-@import "tailwindcss/components";
-
-@import "tailwindcss/utilities";
 
 
 .post {
@@ -13,5 +12,5 @@
     width: 80%;
 }
  .header-text {
-    @apply text-xl font-bold text-gray-600;
+    @apply text-xl font-bold text-red-600;
  }

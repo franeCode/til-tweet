@@ -162,3 +162,4 @@ $(document).on("click", ".js-toggle-edit", function(e) {
         }
     });
 });
+
