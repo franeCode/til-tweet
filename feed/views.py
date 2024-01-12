@@ -1,10 +1,10 @@
 from typing import Any
-from django.http.request import HttpRequest as HttpRequest
+from django.http.response import HttpResponse, JsonResponse
 from django.http.response import HttpResponse
-from django.views.generic import TemplateView, DetailView, CreateView
-from .models import Post
+from django.views.generic import TemplateView, DetailView, CreateView, View
+from .models import Post, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from followers.models import Follower
 from django.contrib.auth.models import User
 
@@ -32,6 +32,12 @@ class PostDetailView(DetailView):
     def dispatch(self, request, *args, **kwargs):
         self.request = request
         return super().dispatch(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        comments = Comment.objects.filter(post=self.object)
+        context['comments'] = comments
+        return context
     
 class CreateNewPost(LoginRequiredMixin, CreateView):
     model = Post
@@ -70,3 +76,27 @@ class ProfileView(TemplateView):
     model = User 
     context_object_name = "user"
     
+class CommentView(LoginRequiredMixin, View):
+    http_method_names = ['post']
+
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def post(self, request, post_id):
+        post = get_object_or_404(Post, pk=post_id)
+        comment_text = request.POST.get('comment_text')
+
+        if comment_text:
+            comment = Comment.objects.create(
+                text=comment_text,
+                author=request.user,
+                post=post
+            )
+
+            return JsonResponse({
+                'success': True,
+                'comment_text': comment.text,
+                'author': comment.author.username,
+            })
+
+        return JsonResponse({'success': False, 'errors': 'Comment text cannot be empty'})

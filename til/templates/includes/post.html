@@ -22,7 +22,7 @@
     {% else %} {% endcomment %}
     <div class="flex items-center mx-2">
       <i class="bx bx-like text-gray-600 cursor-pointer"></i>
-      <i class="bx bx-comment-dots text-gray-600 cursor-pointer"></i>
+      <i class="bx bx-comment-dots text-gray-600 cursor-pointer js-comment" data-post-id="{{ post.id }}"></i>
     </div>
     {% comment %} <span>&nbsp;</span> <span>&nbsp;</span> {% endcomment %} {% comment %} {% endif %} {% endcomment %}
     <div>
@@ -43,3 +43,20 @@
     </div>
   </div>
 </div>
+
+<!-- Comment form -->
+<div class="w-2/4 bg-white h-10 rounded comment-modal hidden mb-6" data-post-id="{{ post.id }}">
+      
+  <form class="comment-form" method="post" action="{% url 'feed:create_comment' post_id=post.id %}">
+    {% csrf_token %}
+    <textarea class="w-full rounded" name="comment_text" placeholder="Add a comment"></textarea>
+    <button class="bg-white" type="submit">Post Comment</button>
+</form>
+</div>
+{% include 'includes/comment.html' %}
+
+
+
+
+
+

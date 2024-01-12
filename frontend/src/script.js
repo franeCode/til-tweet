@@ -163,3 +163,60 @@ $(document).on("click", ".js-toggle-edit", function(e) {
     });
 });
 
+$(document).ready(function () {
+    // Toggle comments section on comment icon click
+    $('.js-comment').click(function () {
+        let postId = $(this).data('post-id');
+        let commentModal = $('.comment-modal[data-post-id="' + postId + '"]');
+        console.log('Toggle comments for post ID:', postId);
+        console.log('Comment modal:', commentModal);
+        commentModal.toggle();
+    });
+
+    // Submit comment form via AJAX
+    $('.comment-form').submit(function (event) {
+        event.preventDefault();
+    
+        let formData = new FormData(this);
+    
+        console.log('Submitting comment form...');
+        console.log('Form data:', formData);
+    
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.success) {
+                    let newCommentHtml = '<div class="comments-section w-2/4 bg-white h-10 rounded my-6">' +
+                               '<span class="text-gray-500">' + response.author + ' - ' + response.comment_text + '</span><br>' +
+                             '</div>';
+            
+                    console.log('Comment submission successful.');
+                    console.log('Response:', response);
+            
+                    // Find the comments section for the specific post
+                    let postId = $(event.target).closest('.comment-modal').data('post-id');
+                    let commentsSection = $('.comments-section[data-post-id="' + postId + '"]');
+            
+                    // Append the new comment HTML to the comments section
+                    commentsSection.append(newCommentHtml);
+            
+                    // Reset the form
+                    $(event.target).trigger('reset');
+                    $('.comment-modal[data-post-id="' + postId + '"]').hide();
+                } else {
+                    console.error('Error submitting comment:', response.errors);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error submitting comment:', error);
+            }
+        });
+    });
+});
+
+
+
