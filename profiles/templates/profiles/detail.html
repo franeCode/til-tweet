@@ -8,19 +8,9 @@
 {% block body %}
 
     {% include "includes/detail.html" %}
-    {% include "includes/profile_btn.html" %}
-    
-    {% if request.GET.show_followed_posts == 'true' %}
-        {% for post in posts %}
-            {% include 'includes/post.html' with post=post show_detail_link=True %}
-        {% endfor %}
-    {% else %}
-        {% for post in user_posts %}
-            {% include 'includes/post.html' with post=post show_detail_link=True %}
-        {% endfor %}
-    {% endif %}
-    
-    {% include "includes/edit.html" %}
+    {% for post in user_posts %}
+        {% include 'includes/post.html' with post=post show_detail_link=True %}
+    {% endfor %} 
 
 
 {% endblock %}

@@ -1,8 +1,3 @@
-const name = userProfileData.name;
-const bio = userProfileData.bio;
-const coding_stack = userProfileData.coding_stack;
-
-
 $.ajaxSetup({
     beforeSend: function beforeSend(xhr, settings) {
         function getCookie(name) {
@@ -15,6 +10,7 @@ $.ajaxSetup({
                 for (let i = 0; i < cookies.length; i += 1) {
                     const cookie = jQuery.trim(cookies[i]);
 
+                    // Does this cookie string begin with the name we want?
                     if (cookie.substring(0, name.length + 1) === (`${name}=`)) {
                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                         break;
@@ -26,7 +22,7 @@ $.ajaxSetup({
         }
 
         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-            
+            // Only send the token to relative URLs i.e. locally.
             xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
         }
     },
@@ -39,9 +35,7 @@ $(document).on("click", ".js-toggle-modal", function(e) {
 })
 .on("click", ".js-submit", function(e) {
     e.preventDefault()
-    console.log("clicked")
     const text = $(".js-post-text").val().trim()
-    console.log(text)
     const $btn = $(this)
 
     if(!text.length) {
@@ -112,6 +106,7 @@ function updatePostsContent(url) {
         type: 'GET', 
         url: url,
         success: (data) => {
+            // Assuming your JSON data includes an 'user_posts' key with the HTML content
             $("#posts-container").html(data.user_posts);
         },
         error: (error) => {
@@ -119,104 +114,3 @@ function updatePostsContent(url) {
         }
     });
 }
-
-$(document).on("click", ".js-toggle-edit", function(e) {
-    e.preventDefault()
-    $(".js-edit-modal").toggleClass("hidden")
-
-    $("#name").val(name);
-    $("#bio").val(bio);
-    console.log("hidden")
-})
-
-.on("click", ".js-edit", function(e) {
-    e.preventDefault();
-    const $btn = $(this);
-    
-    const formData = new FormData($("#editProfileForm")[0]);
-
-    $btn.prop("disabled", true).text("Updating Profile!");
-    
-    $.ajax({
-        type: 'POST',
-        url: $("#editProfileForm").attr("action"),  
-        data: formData,
-        contentType: false,
-        processData: false,
-        success: (data) => {
-            if (data.success) {
-                console.log("Profile Updated!");
-                $btn.prop("disabled", false).text("Profile Updated!");
-                $(".js-edit-modal").addClass("hidden");
-                if (data.redirect_url) {
-                    window.location.href = data.redirect_url;
-                }
-            } else {
-                console.warn("Error Updating Profile");
-                $btn.prop("disabled", false).text("Error Updating Profile");
-            }
-        },
-        error: (error) => {
-            console.warn(error);
-            $btn.prop("disabled", false).text("Error Updating Profile");
-        }
-    });
-});
-
-$(document).ready(function () {
-    // Toggle comments section on comment icon click
-    $('.js-comment').click(function () {
-        let postId = $(this).data('post-id');
-        let commentModal = $('.comment-modal[data-post-id="' + postId + '"]');
-        console.log('Toggle comments for post ID:', postId);
-        console.log('Comment modal:', commentModal);
-        commentModal.toggle();
-    });
-
-    // Submit comment form via AJAX
-    $('.comment-form').submit(function (event) {
-        event.preventDefault();
-    
-        let formData = new FormData(this);
-    
-        console.log('Submitting comment form...');
-        console.log('Form data:', formData);
-    
-        $.ajax({
-            url: $(this).attr('action'),
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                if (response.success) {
-                    let newCommentHtml = '<div class="comments-section w-2/4 bg-white h-10 rounded my-6">' +
-                               '<span class="text-gray-500">' + response.author + ' - ' + response.comment_text + '</span><br>' +
-                             '</div>';
-            
-                    console.log('Comment submission successful.');
-                    console.log('Response:', response);
-            
-                    // Find the comments section for the specific post
-                    let postId = $(event.target).closest('.comment-modal').data('post-id');
-                    let commentsSection = $('.comments-section[data-post-id="' + postId + '"]');
-            
-                    // Append the new comment HTML to the comments section
-                    commentsSection.append(newCommentHtml);
-            
-                    // Reset the form
-                    $(event.target).trigger('reset');
-                    $('.comment-modal[data-post-id="' + postId + '"]').hide();
-                } else {
-                    console.error('Error submitting comment:', response.errors);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('Error submitting comment:', error);
-            }
-        });
-    });
-});
-
-
-

@@ -5,4 +5,4 @@ from .models import Profile
 class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['name', 'bio', 'image', 'cover']
+        fields = ['name', 'interests', 'profile_image', 'hero_image']
