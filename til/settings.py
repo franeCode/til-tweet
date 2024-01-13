@@ -44,11 +44,22 @@ INSTALLED_APPS = [
     'feed',
     'profiles',
     'followers',
+    'widget_tweaks',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'sorl.thumbnail'
+    'sorl.thumbnail',
+    'tailwind',
+    'theme'
 ]
+
+TAILWIND_APP_NAME = 'theme'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+NPM_BIN_PATH = "/Users/mac/.nvm/versions/node/v20.0.0/bin/npm"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -141,11 +152,12 @@ LOGIN_REDIRECT_URL = '/'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = "optional"
+ACCOUNT_EMAIL_VERIFICATION = "none"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True 
 ACCOUNT_LOGOUT_ON_GET = True 
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True 
-ACCOUNT_LOGOUT_REDIRECT = '/'
+ACCOUNT_LOGOUT_REDIRECT = '/login'
 ACCOUNT_PRESERVE_USERNAME_CASING = False
 ACCOUNT_SESSION_REMEMBER = True 
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True 
@@ -166,3 +178,7 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = "static/"
+
+ACCOUNT_FORMS = {
+  'login': 'til.forms.CustomLoginForm'
+}

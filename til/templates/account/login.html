@@ -1,40 +1,108 @@
-{% extends "account/base.html" %}
-{% load i18n %}
-{% load allauth account %}
+{% extends "base.html" %}
+{% load widget_tweaks %}
 
-{% block head_title %}
-    {% trans "Sign In In" %}
-{% endblock head_title %}
-
-<div class="bg-slate-500">
 {% block content %}
-    {% element h1 %}
-        {% trans "Sign In" %}
-    {% endelement %}
-    <p>
-        {% blocktrans %}If you have not created an account yet, then please
-    <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}
-    </p>
-    {% url 'account_login' as login_url %}
-    {% element form form=form method="post" action=login_url tags="entrance,login" %}
-        {% slot body %}
-            {% csrf_token %}
-            {% element fields form=form unlabeled=True %}
-            {% endelement %}
-            {% if redirect_field_value %}
-                <input type="hidden"
-                       name="{{ redirect_field_name }}"
-                       value="{{ redirect_field_value }}" />
-            {% endif %}
-        {% endslot %}
-        {% slot actions %}
-            {% element button type="submit" tags="prominent,login" %}
-                {% trans "Sign In" %}
-            {% endelement %}
-        {% endslot %}
-    {% endelement %}
-    {% if SOCIALACCOUNT_ENABLED %}
-        {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
-    {% endif %}
+<div class="flex flex-col items-center min-h-screen bg-indigo-100 px-4 py-8">
+    <div
+      class="rounded-md bg-white w-full max-w-sm sm:max-w-md border border-indigo-300 shadow-md px-4 py-6 sm:p-8"
+    >
+    <div class="text-lg font-bold text-gray-600 mb-4 py-4 text-center">Login to your account</div>
+      <form class="p-4" method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        <div class="flex flex-col mb-6 p-1">
+          <label
+            for="email"
+            class="mb-1 text-xs sm:text-sm tracking-wide text-gray-700"
+          >E-Mail Address:</label>
+          <div class="relative">
+            <div
+              class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-8 text-gray-400"
+            >
+            <span class="p-2">
+            <i class='bx bx-envelope'></i>
+            </span>
+            </div>
+
+            {% render_field form.login|append_attr:"class:text-sm sm:text-base placeholder-gray-500 px-6 p-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" type="email" placeholder="E-mail address" %}
+          </div>
+        </div>
+        <div class="flex flex-col mb-6 py-4">
+          <label
+            for="password"
+            class="mb-1 text-xs sm:text-sm tracking-wide text-gray-700"
+          >Password:</label>
+          <div class="relative">
+            <div
+              class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-8 text-gray-400"
+            >
+              <span class="p-2">
+                <i class='bx bx-lock-alt'></i>
+              </span>
+            </div>
+
+            {% render_field form.password|append_attr:"class:text-sm sm:text-base placeholder-gray-500 px-6 rounded-lg border border-gray-400 w-full py-2 outline-none" type="password" placeholder="Enter your password" %}
+          </div>
+        </div>
+
+        <div class="flex items-center py-4 -mt-8">
+          <div class="flex ml-auto">
+            <a
+              href="{% url 'account_reset_password' %}"
+              class="inline-flex text-sm text-gray-300 hover:text-gray-600"
+            >Forgot Your Password?</a>
+          </div>
+        </div>
+
+        <div class="flex justify-center w-full">
+          {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
+          <button
+            type="submit"
+            class="flex items-center justify-center focus:outline-none text-gray-500 text-sm sm:text-base bg-gray-200 rounded py-2 px-4 transition duration-150 ease-in"
+          >
+            <span class="mr-2 uppercase">Login</span>
+            <span>
+              <svg
+                class="h-6 w-6"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </form>
+
+    <div class="flex justify-center items-center mt-6">
+      <a
+        href="{{ signup_url }}"
+        class="inline-flex items-center font-bold text-indigo-500 hover:text-indigo-700 text-sm text-center"
+      >
+        <span>
+          <svg
+            class="h-6 w-6"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+            />
+          </svg>
+        </span>
+        <span class="ml-2">You don't have an account?</span>
+        <span class="ml-2">Register now!</span>
+      </a>
+    </div>
+    </div>
+  </div>
 {% endblock content %}
-</div>

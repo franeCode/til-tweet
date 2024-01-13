@@ -1,0 +1,10 @@
+<div class="comments-section w-2/4 rounded my-6" data-post-id="{{ post.id }}">
+    {% for comment in comments %}
+        <span class="text-gray-500">{{ comment.author.username }} - {{ comment.text }}</span><br>
+    {% endfor %}  
+
+    <!-- Newly added comment from AJAX response -->
+    {% if new_comment %}
+        <span class="">{{ new_comment.author }} - {{ new_comment.text }}</span><br>
+    {% endif %}
+</div>

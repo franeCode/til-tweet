@@ -1,4 +1,5 @@
-{% load static %}
+{% load static tailwind_tags %}
+{% comment %} {% load static %} {% endcomment %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,7 +7,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}{% endblock %}</title>
-    <link href="{% static 'src/styles.css' %}" rel="stylesheet" />
+    {% comment %} <link href="{% static 'src/styles.css' %}" rel="stylesheet" /> {% endcomment %}
+    {% tailwind_css %}
     <link
       rel="stylesheet"
       href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
@@ -14,10 +16,10 @@
   </head>
   <body>
     {% comment %} <div class="w-full flex flex-row"> {% endcomment %}
-      <div class="min-h-screen flex flex-row bg-gray-100">
-        <div class="flex flex-col w-56 bg-white rounded-r-3xl overflow-hidden">
+      <div class="min-h-screen flex flex-row bg-gradient-to-r from-blue-950 from-10% via-gray-900 via-30% to-gray-500 to-90%">
+        <div class="flex flex-col w-56 min-h-screen bg-white rounded-r-3xl">
           <div class="flex items-center justify-center h-20 shadow-md">
-            <h1 class="text-3xl uppercase text-indigo-500">Logo</h1>
+            <h1 class="text-3xl text-indigo-500">DevNest</h1>
           </div>
           <ul class="flex flex-col py-4">
             <li>
@@ -90,7 +92,7 @@
           </ul>
         </div>
       
-      <div class="flex flex-col items-center pt-12" style="width: 100%">
+      <div class="w-full flex flex-col items-center justify-center pt-12 overflow-x-hidden">
         {% block body %} 
           {% block content %}{% endblock %} 
         {% endblock %}
@@ -128,6 +130,14 @@
       {% endif %}
 
     </div>
+
+    <script>
+      var userProfileData = {
+          name: "{{ user.profile.name }}",
+          bio: "{{ user.profile.bio }}",
+          coding_stack: "{{ user.profile.coding_stack }}",
+      };
+  </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{% static 'src/script.js' %}"></script>

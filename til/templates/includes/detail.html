@@ -1,78 +1,71 @@
 {% load thumbnail %} 
-
-{% comment %} {% block title %}{{ user.username }}'s Profile{% endblock %} {% endcomment %}
-
+{% comment %} {% block title %}{{ user.username }}'s
+Profile{% endblock %} {% endcomment %} 
 {% block body %}
 <div
-class="relative flex flex-col items-center rounded-[20px] w-3/4 mx-auto p-4 bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none"
+  class="relative flex flex-col items-center justify-center rounded-[20px] w-2/3 mx-auto p-4 bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none"
 >
-<div class="relative flex h-32 w-full justify-center rounded-xl bg-cover">
-  <img
-    src="https://horizon-tailwind-react-git-tailwind-components-horizon-ui.vercel.app/static/media/banner.ef572d78f29b0fee0a09.png"
-    class="absolute flex h-32 w-full justify-center rounded-xl bg-cover"
-  />
-  <i class='absolute top-0 right-0 w-full bx bxs-edit'></i>
-  <div
-    class="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400 dark:!border-navy-700"
-  >
-    {% thumbnail user.profile.image "100x100" crop="center" as im %}
+{% if request.user.is_authenticated and request.user == user %}
+    <button class="js-toggle-edit border border-gray-500 rounded-full text-gray-500 absolute right-5 top-1/2 p-2">
+      Update profile
+    </button>
+    {% endif %}
+  <div class="relative flex h-32 w-full justify-center rounded-xl bg-cover">
+    {% thumbnail user.profile.cover "500x500" crop="center" as im %} 
     <img
-      class="h-full w-full rounded-full"
-      src="{{ im.url }}"
+      class="absolute flex h-32 w-full justify-center rounded-xl bg-cover"
+      src="{{ user.profile.cover.url }}"
       alt="profile-image"
     />
-    {% endthumbnail %}
+    {% endthumbnail %} 
+    
+    <div
+      class="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400 dark:!border-navy-700"
+    >
+      {% thumbnail user.profile.image "100x100" crop="center" as im %}
+      <img
+        class="h-full w-full rounded-full"
+        src="{{ im.url }}"
+        alt="profile-image"
+      />
+      {% endthumbnail %}
+    </div>
   </div>
-  {% comment %} <i class='w-full justify-end bx bxs-edit'></i> {% endcomment %}
-</div>
-<div class="mt-16 flex flex-col items-center">
-  <h4 class="text-xl font-bold text-gray-600">{{ user.username }}</h4>
-  {% if request.user.is_authenticated %} {% if request.user != user %}
-  <button
-    class="p-2 text-green-900 js-follow"
-    type="button"
-    data-username="{{ user.username }}"
-    data-action="{% if you_follow %}un{% endif %}follow"
-    data-url="{% url 'profiles:follow' user.username %}"
-  >
-    <span class="js-follow-text">
-      {% if you_follow %} Unfollow {% else %} Follow {% endif %}
-    </span>
-  </button>
-  {% endif %} {% else %}
-  <div class="mt-3 text-gray-800">Login to follow this user</div>
-  {% endif %}
-</div>
-<div class="mt-6 mb-3 flex gap-14 md:!gap-14">
-  <div class="flex flex-col items-center justify-center">
-    <p class="text-2xl font-bold text-gray-600">{{ total_posts}}</p>
-    <p class="text-sm font-normal text-gray-600">Posts</p>
-  </div>
-  <div class="flex flex-col items-center justify-center">
-    <p class="text-2xl font-bold text-gray-600">{{ total_following }}</p>
-    <p class="text-sm font-normal text-gray-600">Followers</p>
-  </div>
-  <div class="flex flex-col items-center justify-center">
-    <p class="text-2xl font-bold text-gray-600">{{ total_followed_by }}</p>
-    <p class="text-sm font-normal text-gray-600">Following</p>
-  </div>
-</div>
-</div>
-
-{% comment %} {% with content_type=request.GET.content_type|default:"posts" %}
-
-  <div>
-    <a href="?content_type=posts">Posts</a>
-    <a href="?content_type=following">Following</a>
-  </div>
-
-  <div id="posts-container">
-    {% if content_type == "posts" %}
-      {% include 'includes/post.html' with post=user_posts show_detail_link=True %}
-    {% elif content_type == "following" %}
-      {% include 'includes/post.html' with post=posts show_detail_link=True %}
+  <div class="mt-16 flex flex-col items-center">
+    
+    <h2 class="text-xl font-bold text-gray-600">{{ user.profile.name }}</h2>
+    <h4 class="text-base text-gray-400">@{{ user.username }}</h4>
+    {% if request.user.is_authenticated %} {% if request.user != user %}
+    <button
+      class="p-2 text-green-900 js-follow"
+      type="button"
+      data-username="{{ user.username }}"
+      data-action="{% if you_follow %}un{% endif %}follow"
+      data-url="{% url 'profiles:follow' user.username %}"
+    >
+      <span class="js-follow-text">
+        {% if you_follow %} Unfollow {% else %} Follow {% endif %}
+      </span>
+    </button>
+    {% endif %} {% else %}
+    <div class="mt-3 text-gray-800">Login to follow this user</div>
     {% endif %}
+    <div class="text-lg py-4 text-gray-600">{{ user.profile.bio }}</div>
   </div>
+  <div class="mt-6 mb-3 flex gap-14 md:!gap-14">
+    <div class="flex flex-col items-center justify-center">
+      <p class="text-2xl font-bold text-gray-600">{{ total_posts}}</p>
+      <p class="text-sm font-normal text-gray-600">Posts</p>
+    </div>
+    <div class="flex flex-col items-center justify-center">
+      <p class="text-2xl font-bold text-gray-600">{{ total_following }}</p>
+      <p class="text-sm font-normal text-gray-600">Followers</p>
+    </div>
+    <div class="flex flex-col items-center justify-center">
+      <p class="text-2xl font-bold text-gray-600">{{ total_followed_by }}</p>
+      <p class="text-sm font-normal text-gray-600">Following</p>
+    </div>
+  </div>
+</div>
 
-{% endwith %}  {% endcomment %}
 {% endblock %}
