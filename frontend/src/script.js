@@ -173,12 +173,6 @@ $(document).ready(function () {
         commentModal.toggle();
     });
 
-    $('.toggle-comments').click(function() {
-        let postId = $(this).data('post-id');
-        $('.comments-section[data-post-id="' + postId + '"]').toggle();
-    })
-
-    // Submit comment form via AJAX
     $('.comment-form').submit(function (event) {
         event.preventDefault();
     
@@ -195,21 +189,17 @@ $(document).ready(function () {
             contentType: false,
             success: function (response) {
                 if (response.success) {
-                    let newCommentHtml = '<div class="comments-section w-2/4 bg-white h-10 rounded my-6">' +
-                               '<span class="text-gray-500">' + response.author + ' - ' + response.comment_text + '</span><br>' +
-                             '</div>';
+                    let newCommentHtml = 
+                               '<li class="text-gray-500 bg-white rounded my-2 p-2">' + response.author + ' - ' + response.comment_text + '</li>'
             
                     console.log('Comment submission successful.');
                     console.log('Response:', response);
             
-                    // Find the comments section for the specific post
                     let postId = $(event.target).closest('.comment-modal').data('post-id');
                     let commentsSection = $('.comments-section[data-post-id="' + postId + '"]');
             
-                    // Append the new comment HTML to the comments section
                     commentsSection.append(newCommentHtml);
             
-                    // Reset the form
                     $(event.target).trigger('reset');
                     $('.comment-modal[data-post-id="' + postId + '"]').hide();
                 } else {
@@ -220,6 +210,37 @@ $(document).ready(function () {
                 console.error('Error submitting comment:', error);
             }
         });
+    });
+
+    
+    $('.toggle-comments').click(function () {
+        let postId = $(this).data('post-id');
+        let commentsSection = $('.comments-section[data-post-id="' + postId + '"]');
+        commentsSection.toggle('hidden');
+    
+        // $.ajax({
+        //     url: '/post/' + postId + '/comment/',
+        //     type: 'GET',
+        //     dataType: 'json',
+        //     success: function (response) {
+        //         if (response.success) {
+        //             let commentsHtml = '<ul class="comments-section w-2/4 rounded my-4" data-post-id="' + postId + '">';
+                    
+        //             response.comments.forEach(function (comment) {
+        //                 commentsHtml += '<li class="text-gray-500 bg-white rounded my-1">' + comment.fields.author + ' - ' + comment.fields.text + '</li>';
+        //             });
+    
+        //             commentsHtml += '</ul>';
+                    
+        //             commentsSection.html(commentsHtml).toggle();
+        //         } else {
+        //             console.error('Error fetching comments:', response.error);
+        //         }
+        //     },
+        //     error: function (xhr, status, error) {
+        //         console.error('Error fetching comments:', error);
+        //     }
+        // });
     });
 });
 

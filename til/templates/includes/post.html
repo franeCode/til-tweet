@@ -4,28 +4,15 @@
   id="posts-container"
   class="px-10 my-4 py-6 bg-white rounded-lg shadow-md w-2/3"
 >
-  <div class="flex justify-between items-center">
-    <span class="text-xs font-light text-gray-600"
-      >{{ post.date|date:"F j, Y, g:i a" }}</span
-    >
+  <div class="flex flex-row w-full justify-between pt-2">
+    <span class="text-lg font-light text-yellow-500 bg-yellow-100 border border-yellow-500 rounded-full px-2">Frontend</span>
+    <span class="text-xs font-light text-gray-600">
+      {{ post.date|timesince }} ago
+    </span>
   </div>
-  <div class="mt-2">
-    <p class="mt-2 text-gray-600">{{ post.text }}</p>
-  </div>
-  <div class="flex justify-between items-center mt-4">
-    {% comment %} {% if show_detail_link %}
-    <a
-      class="text-blue-600 hover:underline"
-      href="{% url 'feed:detail' post.id %}"
-      >Read more</a
-    >
-    {% else %} {% endcomment %}
-    <div class="flex items-center mx-2">
-      <i class="bx bx-like text-gray-600 cursor-pointer"></i>
-      <i class="bx bx-comment-dots text-gray-600 cursor-pointer js-comment" data-post-id="{{ post.id }}"></i>
-      <button class="toggle-comments" data-post-id="{{ post.id }}">{{ post.get_comment_count }} comments</button>
-    </div>
-    {% comment %} <span>&nbsp;</span> <span>&nbsp;</span> {% endcomment %} {% comment %} {% endif %} {% endcomment %}
+  <div class="flex flex-row justify-between items-center py-2 mt-2">
+    <div class="w-3/4 mt-2 text-gray-600">{{ post.text }}</div>
+
     <div>
       <a
         class="flex items-center"
@@ -43,21 +30,41 @@
       </a>
     </div>
   </div>
+  <div class="flex w-full justify-between items-center border-t mt-10">
+    <div class="flex items-center mx-2 mt-2">
+      <i class="bx bx-like text-gray-600 cursor-pointer"></i>
+      <span>&nbsp;</span> <span>&nbsp;</span>
+      <i
+        class="bx bx-comment-dots text-gray-600 cursor-pointer js-comment"
+        data-post-id="{{ post.id }}"
+      ></i>
+    </div>
+    <button class="toggle-comments text-gray-600 cursor-pointer" data-post-id="{{ post.id }}">
+      {{ post.get_comment_count }} comments
+    </button>
+    {% comment %} <span>&nbsp;</span> <span>&nbsp;</span> {% endcomment %} {% comment %} {% endif %} {% endcomment %}
+  </div>
 </div>
 
 <!-- Comment form -->
-<div class="w-2/4 bg-white h-10 rounded comment-modal hidden mb-6" data-post-id="{{ post.id }}">
-      
-  <form class="comment-form" method="post" action="{% url 'feed:create_comment' post_id=post.id %}">
+<div
+  class="w-2/4 h-10 rounded comment-modal hidden mb-6"
+  data-post-id="{{ post.id }}"
+>
+  <form
+    class="comment-form w-full flex flex-row justify-between items-center"
+    method="post"
+    action="{% url 'feed:create_comment' post_id=post.id %}"
+  >
     {% csrf_token %}
-    <textarea class="w-full rounded" name="comment_text" placeholder="Add a comment"></textarea>
-    <button class="bg-white" type="submit">Post Comment</button>
-</form>
+    <textarea
+      class="w-full rounded focus:outline-none focus:ring focus:border-yellow-600"
+      name="comment_text"
+      placeholder="Add a comment"
+    ></textarea>
+    <button class="bg-white border border-gray-500 rounded text-gray-500 p-2" type="submit">Post</button>
+  </form>
 </div>
-{% include 'includes/comment.html' %}
 
 
-
-
-
-
+{% include 'includes/comment.html' with comment=comment %}

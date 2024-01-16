@@ -1,10 +1,9 @@
-<div class="comments-section w-2/4 rounded my-6" data-post-id="{{ post.id }}">
+<ul class="comments-section w-2/4 rounded my-4 hidden" data-post-id="{{ post.id }}">
     {% for comment in comments %}
-        <span class="text-gray-500">{{ comment.author.username }} - {{ comment.text }}</span><br>
-    {% endfor %}  
-
+        <li class="text-gray-500 bg-white rounded my-1">{{ comment.author.username }} - {{ comment.text }}</li>
+    {% endfor %}
     <!-- Newly added comment from AJAX response -->
     {% if new_comment %}
-        <span class="">{{ new_comment.author }} - {{ new_comment.text }}</span><br>
+        <li class="text-gray-500 bg-white rounded my-2">{{ new_comment.author }} - {{ new_comment.text }}</li>
     {% endif %}
-</div>
+</ul>

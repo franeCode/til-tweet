@@ -20,6 +20,9 @@
         {% endfor %}
     {% endif %}
     
+    {% comment %} {% for comment in comments %} {% endcomment %}
+    {% comment %} {% include 'includes/comment.html' with comments=comments %} {% endcomment %}
+    {% comment %} {% endfor %} {% endcomment %}
     {% include "includes/edit.html" %}
 
 

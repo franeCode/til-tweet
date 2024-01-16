@@ -7,6 +7,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from followers.models import Follower
 from django.contrib.auth.models import User
+from django.core.serializers import serialize
+from django.template.loader import render_to_string
 
 class HomePage(TemplateView):
     http_method_names = ["get"]
@@ -33,9 +35,10 @@ class PostDetailView(DetailView):
         self.request = request
         return super().dispatch(request, *args, **kwargs)
     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        comments = Comment.objects.filter(post=self.object)
+    def post_comment(request, post_id, *args, **kwargs):
+        post = get_object_or_404(Post, pk=post_id)
+        context = super().get_context_data(*args, **kwargs)
+        comments = Comment.objects.filter(post=post).order_by('-id')
         context['comments'] = comments
         return context
     
@@ -70,18 +73,27 @@ class CreateNewPost(LoginRequiredMixin, CreateView):
             content_type="application/html"
         )
         
-class ProfileView(TemplateView):
-    http_method_names = ["get"]
-    template_name = "feed/detail.html"
-    model = User 
-    context_object_name = "user"
-    
 class CommentView(LoginRequiredMixin, View):
+    def get(self, request, post_id):
+        try:
+            comments = Comment.objects.filter(post_id=post_id)
+            comments_json = serialize('json', comments)
+            return JsonResponse({'success': True, 'comments': comments_json})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    
+class CreateCommentView(LoginRequiredMixin, View):
     http_method_names = ['post']
 
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
+    def get_context_data(self, post_id, **kwargs):
+        user = self.get_object()
+        context = super().get_context_data(**kwargs)
+        context['comments'] = Comment.objects.filter(post_id=post_id).order_by('-id')
+        return context
+        
     def post(self, request, post_id):
         post = get_object_or_404(Post, pk=post_id)
         comment_text = request.POST.get('comment_text')
