@@ -3,10 +3,10 @@
 <ul class="comments-section w-2/4 rounded my-4 hidden" data-post-id="{{ post.id }}">
     {% for comment in comments %}
         <li class="flex flex-col text-gray-500 bg-white rounded my-1">
-            <div>
+            <div class="flex flex-row justify-between">
                 <small>{{ comment.author.username }}</small>
                 <span>&nbsp;</span>
-                <span>{{ comment.formatted_date }}
+                <small>{{ comment.formatted_date }}</small>
             </div>
             <div>
              <p>{{ comment.text }}</p>

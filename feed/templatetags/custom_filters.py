@@ -9,18 +9,22 @@ register = template.Library()
 def custom_timesince(value):
     now = timezone.now()
     difference = now - value
-    weeks, days = divmod(difference.days, 7)
-    hours, remainder = divmod(difference.seconds, 3600)
-    minutes, _ = divmod(remainder, 60)
+    days, seconds = divmod(difference.seconds, 86400)
 
-    result = ''
-    if weeks:
-        result += f'{weeks}w '
-    if days:
-        result += f'{days}d '
-    if hours:
-        result += f'{hours}h '
-    if minutes:
-        result += f'{minutes}m '
+    if difference.days >= 7:
+        weeks, days = divmod(difference.days, 7)
+        result = f'{weeks}w {days}d '
+    elif difference.days >= 1:
+        hours, remainder = divmod(seconds, 3600)
+        result = f'{difference.days}d {hours}h '
+    elif seconds >= 3600:
+        hours, remainder = divmod(seconds, 3600)
+        minutes, _ = divmod(remainder, 60)
+        result = f'{hours}h {minutes}m '
+    elif seconds >= 60:
+        minutes, seconds = divmod(seconds, 60)
+        result = f'{minutes}m {seconds}s '
+    else:
+        result = f'{seconds}s '
 
-    return result + 'ago'
+    return result + ' ago'
