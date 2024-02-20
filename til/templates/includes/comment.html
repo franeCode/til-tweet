@@ -1,6 +1,17 @@
+{% load custom_filters %}
+
 <ul class="comments-section w-2/4 rounded my-4 hidden" data-post-id="{{ post.id }}">
     {% for comment in comments %}
-        <li class="text-gray-500 bg-white rounded my-1">{{ comment.author.username }} - {{ comment.text }}</li>
+        <li class="flex flex-col text-gray-500 bg-white rounded my-1">
+            <div>
+                <small>{{ comment.author.username }}</small>
+                <span>&nbsp;</span>
+                <span>{{ comment.formatted_date }}
+            </div>
+            <div>
+             <p>{{ comment.text }}</p>
+            </div>
+        </li>
     {% endfor %}
     <!-- Newly added comment from AJAX response -->
     {% if new_comment %}

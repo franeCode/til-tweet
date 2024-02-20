@@ -1,3 +1,4 @@
+{% load custom_filters %}
 {% load thumbnail %}
 
 <div
@@ -7,7 +8,7 @@
   <div class="flex flex-row w-full justify-between pt-2">
     <span class="text-lg font-light text-yellow-500 bg-yellow-100 border border-yellow-500 rounded-full px-2">Frontend</span>
     <span class="text-xs font-light text-gray-600">
-      {{ post.date|timesince }} ago
+      {{ post.formatted_date }}
     </span>
   </div>
   <div class="flex flex-row justify-between items-center py-2 mt-2">
@@ -67,4 +68,4 @@
 </div>
 
 
-{% include 'includes/comment.html' with comment=comment %}
+{% include 'includes/comment.html' with comments=post.comment_set.all %}
