@@ -74,9 +74,12 @@ class CreateNewPost(LoginRequiredMixin, CreateView):
         )
         
 class CommentView(LoginRequiredMixin, View):
+    model = Comment
+    
+    
     def get(self, request, post_id):
         try:
-            comments = Comment.objects.filter(post_id=post_id)
+            comments = Comment.objects.filter(post_id=post_id).order_by('-id')
             comments_json = serialize('json', comments)
             return JsonResponse({'success': True, 'comments': comments_json})
         except Exception as e:
@@ -84,6 +87,7 @@ class CommentView(LoginRequiredMixin, View):
     
 class CreateCommentView(LoginRequiredMixin, View):
     http_method_names = ['post']
+    model = Comment
 
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
